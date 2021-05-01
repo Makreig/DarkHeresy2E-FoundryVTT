@@ -87,6 +87,22 @@ Hooks.once("init", () => {
           [CONST.TOKEN_DISPLAY_MODES.ALWAYS]: "Always for Everyone"
         }
     });
+    game.settings.register("dark-heresy", "useOldRighteous", {
+        name: "Use 1st edition righteous fury",
+        hint: "Use the old exploding damage version of righteous fury",
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: false
+    });
+    game.settings.register("dark-heresy", "hrNoConfirmRighteous", {
+        name: "House Rule: don't confirm righteous fury",
+        hint: "Assume righteous fury is always successfull (only used with 1st edition righteous fury)",
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: false
+    });
 });
 
 Hooks.once("ready", () => {

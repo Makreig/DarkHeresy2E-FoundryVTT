@@ -63,7 +63,7 @@ function _rollDamage(rollData) {
     rollData.damages = [];
     if (rollData.damageFormula) formula = `${rollData.damageFormula} + ${rollData.damageBonus}`;
     let penetration = _rollPenetration(rollData);
-    let firstHit = _computeDamage(formula, rollData.dos, penetration);
+    let firstHit = _computeDamage(formula, rollData.dos, penetration, rollData);
     if (firstHit.total !== 0) {
         const firstLocation = _getLocation(rollData.result);
         firstHit.location = firstLocation;
@@ -75,7 +75,7 @@ function _rollDamage(rollData) {
             }
             rollData.numberOfHit = maxAdditionalHit + 1;
             for (let i = 0; i < maxAdditionalHit; i++) {
-                let additionalHit = _computeDamage(formula, rollData.dos, penetration);
+                let additionalHit = _computeDamage(formula, rollData.dos, penetration, rollData);
                 additionalHit.location = _getAdditionalLocation(firstLocation, i);
                 rollData.damages.push(additionalHit);
             }
@@ -87,7 +87,7 @@ function _rollDamage(rollData) {
     }
 }
 
-function _computeDamage(formula, dos, penetration) {
+function _computeDamage(formula, dos, penetration, rollData = false) {
     let r = new Roll(formula, {});
     r.evaluate();
     let damage = {
@@ -99,7 +99,7 @@ function _computeDamage(formula, dos, penetration) {
     r.terms.forEach((term) => {
         if (typeof term === 'object' && term !== null) {
             term.results.forEach(result => {
-                if (result.active && result.result === term.faces) damage.righteousFury = _rollRighteousFury();
+                if (result.active && result.result === term.faces) damage.righteousFury = _rollRighteousFury(rollData);
                 if (result.active && result.result < dos) damage.dices.push(result.result);
                 if (result.active && (typeof damage.minDice === "undefined" || result.result < damage.minDice)) damage.minDice = result.result;
             });
@@ -115,10 +115,30 @@ function _rollPenetration(rollData) {
     return r.total;
 }
 
-function _rollRighteousFury() {
-    let r = new Roll("1d5", {});
-    r.evaluate();
-    return r.total;
+function _rollRighteousFury(rollData) {
+    let useOldRighteous = game.settings.get("dark-heresy", "useOldRighteous");
+    if (useOldRighteous) {
+        let skill = Object.assign({}, rollData);
+        let total = 0;
+        _rollTarget(skill);
+        if (skill.isSuccess || game.settings.get("dark-heresy", "hrNoConfirmRighteous")) {
+            let r = new Roll("1d10", {});
+            r.evaluate();
+            total = r.total;
+            r.terms.forEach((term) => {
+                if (typeof term === 'object' && term !== null) {
+                    term.results.forEach(result => {
+                        if (result.active && result.result === term.faces) total += _rollRighteousFury(skill);
+                    });
+                }
+            });
+        }
+        return total;
+    } else {
+        let r = new Roll("1d5", {});
+        r.evaluate();
+        return r.total;
+    }
 }
 
 function _computePsychicPhenomena(rollData) {

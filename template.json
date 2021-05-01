@@ -110,6 +110,7 @@
             ],
             "advance": -20,
             "isSpecialist": false,
+            "inDW": true,
             "specialities": {},
             "cost": 0
           },
@@ -133,6 +134,7 @@
             ],
             "advance": -20,
             "isSpecialist": false,
+            "games": ["DH1", "DW"],
             "specialities": {},
             "cost": 0
           },

@@ -109,6 +109,7 @@ export class DarkHeresySheet extends ActorSheet {
     event.preventDefault();
     const skillName = $(event.currentTarget).data("skill");
     const skill = this.actor.data.data.skills[skillName];
+    console.log(this.actor.data.data);
     const defaultChar = skill.defaultCharacteristic || skill.characteristics[0]
 
     let characteristics = this._getCharacteristicOptions(defaultChar)
