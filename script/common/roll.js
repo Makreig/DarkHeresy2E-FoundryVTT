@@ -48,12 +48,16 @@ function _rollTarget(rollData) {
     rollData.result = r.total;
     rollData.rollObject = r;
     rollData.isSuccess = rollData.result <= rollData.target;
+    let initDegrees = 1;
+    if (game.settings.get('dark-heresy', 'useFirstEdSkills')) {
+        initDegrees = 0;
+    }
     if (rollData.isSuccess) {
         rollData.dof = 0;
-        rollData.dos = 1 + _getDegree(rollData.target, rollData.result);
+        rollData.dos = initDegrees + _getDegree(rollData.target, rollData.result);
     } else {
         rollData.dos = 0;
-        rollData.dof = 1 + _getDegree(rollData.result, rollData.target);
+        rollData.dof = initDegrees + _getDegree(rollData.result, rollData.target);
     }
     if (typeof rollData.psy !== "undefined") _computePsychicPhenomena(rollData);
 }
