@@ -2,6 +2,7 @@
   "Actor": {
     "types": [
       "acolyte",
+      "kill-team",
       "npc"
     ],
     "templates": {
@@ -100,7 +101,9 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DH2E", "DW"]
           },
           "athletics": {
             "label": "SKILL.ATHLETICS",

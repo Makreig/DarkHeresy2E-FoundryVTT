@@ -1,6 +1,7 @@
 import { DarkHeresyActor } from "./actor.js";
 import { DarkHeresyItem } from "./item.js";
 import { AcolyteSheet } from "../sheet/actor/acolyte.js";
+import { DeathwatchSheet } from "../sheet/actor/deathwatch.js";
 import { NpcSheet } from "../sheet/actor/npc.js";
 import { WeaponSheet } from "../sheet/weapon.js";
 import { AmmunitionSheet } from "../sheet/ammunition.js";
@@ -42,6 +43,7 @@ Hooks.once("init", () => {
     };
     Actors.unregisterSheet("core", ActorSheet);
     Actors.registerSheet("dark-heresy", AcolyteSheet, { types: ["acolyte"], makeDefault: true });
+    Actors.registerSheet("dark-heresy", DeathwatchSheet, { types: ["acolyte"], makeDefault: false });
     Actors.registerSheet("dark-heresy", NpcSheet, { types: ["npc"], makeDefault: true });
     Items.unregisterSheet("core", ItemSheet);
     Items.registerSheet("dark-heresy", WeaponSheet, { types: ["weapon"], makeDefault: true });
@@ -98,6 +100,14 @@ Hooks.once("init", () => {
     game.settings.register("dark-heresy", "hrNoConfirmRighteous", {
         name: "House Rule: don't confirm righteous fury",
         hint: "Assume righteous fury is always successfull (only used with 1st edition righteous fury)",
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: false
+    });
+    game.settings.register("dark-heresy", "useFirstEdSkills", {
+        name: "Use 1st edition skills rolls",
+        hint: "Use basic and advanced skills rules from first edition",
         scope: "world",
         config: true,
         type: Boolean,

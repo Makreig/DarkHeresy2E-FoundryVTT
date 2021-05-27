@@ -1,10 +1,10 @@
 import { DarkHeresySheet } from "./actor.js";
 
-export class AcolyteSheet extends DarkHeresySheet {
+export class DeathwatchSheet extends DarkHeresySheet {
 
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
-            classes: ["dark-heresy", "sheet", "actor"],
+            classes: ["dark-heresy", "sheet", "actor", "deathwatch"],
             template: "systems/dark-heresy/template/sheet/actor/acolyte.html",
             width: 700,
             height: 881,
@@ -29,7 +29,7 @@ export class AcolyteSheet extends DarkHeresySheet {
 
     getData() {
         const data = super.getData();
-        //data.data.skills = data.data.skills.filter(skill => skill.inGames.includes('DH2E'));
+        //data.data.skills = data.data.skills.filter(skill => skill.inGames.includes('DW'));
         return data;
     }
 

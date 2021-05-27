@@ -109,12 +109,22 @@ export class DarkHeresySheet extends ActorSheet {
     event.preventDefault();
     const skillName = $(event.currentTarget).data("skill");
     const skill = this.actor.data.data.skills[skillName];
-    console.log(this.actor.data.data);
     const defaultChar = skill.defaultCharacteristic || skill.characteristics[0]
 
     let characteristics = this._getCharacteristicOptions(defaultChar)
     characteristics = characteristics.map((char) => {
-      char.target += skill.advance
+      if (game.settings.get('dark-heresy', 'useFirstEdSkills')) {
+        if (skill.isBasic && skill.advance == -20) {
+          char.target = ceil(char.target/2);
+        } else if (skill.advance != -20) {
+          char.target += skill.advance
+        } else {
+          //return error
+          console.log('cannot use advanced skill');
+        }
+      } else {
+        char.target += skill.advance
+      }
       return char
     })
 
