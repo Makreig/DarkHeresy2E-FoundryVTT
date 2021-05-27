@@ -1,4 +1,4 @@
-import {prepareCommonRoll, prepareCombatRoll, preparePsychicPowerRoll} from "../../common/dialog.js";
+import {prepareCommonRoll, prepareCombatRoll, preparePsychicPowerRoll, alertCannotUseAdvancedSkill} from "../../common/dialog.js";
 
 export class DarkHeresySheet extends ActorSheet {
   activateListeners(html) {
@@ -116,26 +116,28 @@ export class DarkHeresySheet extends ActorSheet {
     characteristics = characteristics.map((char) => {
       if (game.settings.get('dark-heresy', 'useFirstEdSkills')) {
         if (skill.isBasic && skill.advance == -20) {
-          char.target = ceil(char.target/2);
+          char.target = Math.ceil(char.target/2);
         } else if (skill.advance != -20) {
           char.target += skill.advance
         } else {
-          //return error
-          console.log('cannot use advanced skill');
+          return false;
         }
       } else {
         char.target += skill.advance
       }
       return char
-    })
-
+    });
     const rollData = {
       name: skill.label,
       baseTarget: skill.total,
       modifier: 0,
       characteristics: characteristics
     };
-    await prepareCommonRoll(rollData);
+    if (!characteristics.includes(false)) {
+      await prepareCommonRoll(rollData);
+    } else {
+      await alertCannotUseAdvancedSkill(rollData);
+    }
   }
 
   async _prepareRollSpeciality(event) {

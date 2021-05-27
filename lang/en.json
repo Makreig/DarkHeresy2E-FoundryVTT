@@ -89,6 +89,7 @@
   "BUTTON.CANCEL": "Cancel",
   "BUTTON.YES": "Yes",
   "BUTTON.NO": "No",
+  "BUTTON.OK": "OK",
 
   "ENCUMBRANCE.MAX": "Max",
   "ENCUMBRANCE.CURRENT": "Current",
@@ -287,6 +288,7 @@
   "SKILL.TRADE": "Trade",
 
   "SKILL.NAME": "Name",
+  "SKILL.BASIC": "Basic",
   "SKILL.ADVANCE": "Advance",
   "SKILL.TOTAL": "Total",
   "SKILL.COST": "Cost",

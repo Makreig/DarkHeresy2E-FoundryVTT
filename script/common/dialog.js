@@ -1,5 +1,30 @@
 import { commonRoll, combatRoll, reportEmptyClip } from "./roll.js";
 
+export async function alertCannotUseAdvancedSkill(rollData) {
+    const html = await renderTemplate("systems/dark-heresy/template/dialog/error-alert.html", rollData);
+    let dialog = new Dialog({
+        title: game.i18n.localize(rollData.name),
+        content: html,
+        buttons: {
+            cancel: {
+                icon: '<i class="fas fa-times"></i>',
+                label: game.i18n.localize("BUTTON.OK"),
+                callback: () => {},
+            },
+
+        },
+        default: "cancel",
+        close: () => {},
+        render: (html) => {
+            const target = html.find('#message');
+            target.html("You are not trained to use this skill.")
+        }
+    }, {
+        width: 250,
+    });
+    dialog.render(true);
+}
+
 export async function prepareCommonRoll(rollData) {
     const html = await renderTemplate("systems/dark-heresy/template/dialog/common-roll.html", rollData);
     let dialog = new Dialog({
