@@ -2,11 +2,14 @@
   "name": "dark-heresy",
   "title": "Dark Heresy 2E",
   "description": "Innocence proves nothing",
-  "version": "3.0.0",
-  "minimumCoreVersion": "0.8.1",
-  "compatibleCoreVersion": "0.8.2",
-  "templateVersion": 2,
   "author": "JeansenVaars, Moo Man, fredthedeadhead, Perfectro",
+  "authors": [],
+  "url": "https://github.com/moo-man/DarkHeresy2E-FoundryVTT",
+  "license": "LICENSE.txt",
+  "flags": {},
+  "version": "3.0.0",
+  "minimumCoreVersion": "0.7.5",
+  "compatibleCoreVersion": "0.8.2",
   "scripts": [],
   "esmodules": [
     "script/common/hooks.js"
@@ -48,15 +51,6 @@
     "style/sheet/actor/tab/progression.css",
     "style/sheet/actor/tab/notes.css"
   ],
-  "packs": [
-    {
-      "name": "character-aptitudes",
-      "label": "Character Aptitudes",
-      "system": "dark-heresy",
-      "path": "./packs/character/aptitudes.db",
-      "entity": "Item"
-    }
-  ],
   "languages": [
     {
       "lang": "en",
@@ -74,13 +68,22 @@
       "path": "lang/fr.json"
     }
   ],
-  "gridDistance": 1,
-  "gridUnits": "m",
-  "primaryTokenAttribute": null,
-  "secondaryTokenAttribute": null,
-  "url": "https://github.com/moo-man/DarkHeresy2E-FoundryVTT",
+  "packs": [
+    {
+      "name": "character-aptitudes",
+      "label": "Character Aptitudes",
+      "system": "dark-heresy",
+      "path": "./packs/character/aptitudes.db",
+      "entity": "Item",
+      "private": false
+    }
+  ],
+  "system": [],
+  "dependencies": [],
   "socket": true,
   "manifest": "https://raw.githubusercontent.com/moo-man/DarkHeresy2E-FoundryVTT/08-support/system.json",
   "download": "https://github.com/moo-man/DarkHeresy2E-FoundryVTT/archive/refs/heads/08-support.zip",
-  "license": "LICENSE.txt"
+  "protected": false,
+  "gridDistance": 1,
+  "gridUnits": "m"
 }

@@ -2,7 +2,6 @@
   "Actor": {
     "types": [
       "acolyte",
-      "kill-team",
       "npc"
     ],
     "templates": {
@@ -102,8 +101,8 @@
             "isSpecialist": false,
             "specialities": {},
             "cost": 0,
-            "isBasic": true,
-            "inGames": ["DH2E", "DW"]
+            "isBasic": false,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
           },
           "athletics": {
             "label": "SKILL.ATHLETICS",
@@ -113,9 +112,10 @@
             ],
             "advance": -20,
             "isSpecialist": false,
-            "inDW": true,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DH2E", "BC"]
           },
           "awareness": {
             "label": "SKILL.AWARENESS",
@@ -127,7 +127,21 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
+          },
+          "carouse": {
+            "label": "SKILL.CAROUSE",
+            "characteristics": [
+              "T"
+            ],
+            "advance": -20,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DW", "RT"]
           },
           "charm": {
             "label": "SKILL.CHARM",
@@ -137,9 +151,85 @@
             ],
             "advance": -20,
             "isSpecialist": false,
-            "games": ["DH1", "DW"],
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
+          },
+          "chem-use": {
+            "label": "SKILL.CHEM-USE",
+            "characteristics": [
+              "Int"
+            ],
+            "advance": -20,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DW", "RT"]
+          },
+          "ciphers": {
+            "label": "SKILL.CIPHERS",
+            "characteristics": [
+              "Int"
+            ],
+            "advance": -20,
+            "isSpecialist": true,
+            "specialities": {
+              "astropath": {
+                "label": "Astropath",
+                "advance": -20,
+                "cost": 0
+              },
+              "chapterRunes": {
+                "label": "Chapter Runes",
+                "advance": -20,
+                "cost": 0
+              },
+              "deathwatch": {
+                "label": "Deathwatch",
+                "advance": -20,
+                "cost": 0
+              },
+              "imperialCodes": {
+                "label": "Imperial Codes",
+                "advance": -20,
+                "cost": 0
+              },
+              "inquisition": {
+                "label": "Inquisition",
+                "advance": -20,
+                "cost": 0
+              },
+              "rogueTrader": {
+                "label": "Rogue Trader",
+                "advance": -20,
+                "cost": 0
+              },
+              "mercenaryCant": {
+                "label": "Mercenary Cant",
+                "advance": -20,
+                "cost": 0
+              },
+              "nobiliteEncoding": {
+                "label": "Nobilite Encoding",
+                "advance": -20,
+                "cost": 0
+              },
+              "underworld": {
+                "label": "Underworld",
+                "advance": -20,
+                "cost": 0
+              },
+              "xenosMarkings": {
+                "label": "Xenos Markings",
+                "advance": -20,
+                "cost": 0
+              }
+            },
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DW", "RT"]
           },
           "command": {
             "label": "SKILL.COMMAND",
@@ -152,7 +242,9 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
           },
           "commerce": {
             "label": "SKILL.COMMERCE",
@@ -163,7 +255,9 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DH2E", "RT", "BC"]
           },
           "commonLore": {
             "label": "SKILL.COMMON_LORE",
@@ -214,8 +308,13 @@
                 "advance": -20,
                 "cost": 0
               },
-              "collegiaTitanicu": {
-                "label": "Collegia Titanicu",
+              "collegiaTitanicus": {
+                "label": "Collegia Titanicus",
+                "advance": -20,
+                "cost": 0
+              },
+              "deathwatch": {
+                "label": "Deathwatch",
                 "advance": -20,
                 "cost": 0
               },
@@ -241,6 +340,11 @@
               },
               "imperium": {
                 "label": "Imperium",
+                "advance": -20,
+                "cost": 0
+              },
+              "jerichoReach": {
+                "label": "Jericho Reach",
                 "advance": -20,
                 "cost": 0
               },
@@ -279,7 +383,33 @@
                 "advance": -20,
                 "cost": 0
               }
-            }
+            },
+            "isBasic": false,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
+          },
+          "concealment": {
+            "label": "SKILL.CONCEALMENT",
+            "characteristics": [
+              "Ag"
+            ],
+            "advance": -20,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DW", "RT"]
+          },
+          "contortionist": {
+            "label": "SKILL.CONTORTIONIST",
+            "characteristics": [
+              "Ag"
+            ],
+            "advance": -20,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DW", "RT", "BC"]
           },
           "deceive": {
             "label": "SKILL.DECEIVE",
@@ -290,7 +420,21 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
+          },
+          "demolition": {
+            "label": "SKILL.DEMOLITION",
+            "characteristics": [
+              "Int"
+            ],
+            "advance": -20,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DW", "RT"]
           },
           "dodge": {
             "label": "SKILL.DODGE",
@@ -300,7 +444,49 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
+          },
+          "drive": {
+            "label": "SKILL.DRIVE",
+            "characteristics": [
+              "Ag"
+            ],
+            "advance": -20,
+            "isSpecialist": true,
+            "specialities": {
+              "ground": {
+                "label": "Ground",
+                "advance": -20,
+                "cost": 0
+              },
+              "skimmer": {
+                "label": "Skimmer",
+                "advance": -20,
+                "cost": 0
+              },
+              "walker": {
+                "label": "Walker",
+                "advance": -20,
+                "cost": 0
+              }
+            },
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DW", "RT"]
+          },
+          "evaluate": {
+            "label": "SKILL.EVALUATE",
+            "characteristics": [
+              "Int"
+            ],
+            "advance": -20,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DW", "RT"]
           },
           "forbiddenLore": {
             "label": "SKILL.FORBIDDEN_LORE",
@@ -376,7 +562,21 @@
                 "advance": -20,
                 "cost": 0
               }
-            }
+            },
+            "isBasic": false,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
+          },
+          "gamble": {
+            "label": "SKILL.GAMBLE",
+            "characteristics": [
+              "Int"
+            ],
+            "advance": -20,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DW", "RT"]
           },
           "inquiry": {
             "label": "SKILL.INQUIRY",
@@ -388,7 +588,9 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
           },
           "interrogation": {
             "label": "SKILL.INTERROGATION",
@@ -399,7 +601,9 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
           },
           "intimidate": {
             "label": "SKILL.INTIMIDATE",
@@ -410,7 +614,33 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
+          },
+          "invocation": {
+            "label": "SKILL.INVOCATION",
+            "characteristics": [
+              "WP"
+            ],
+            "advance": -20,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DW", "RT"]
+          },
+          "literacy": {
+            "label": "SKILL.LITERACY",
+            "characteristics": [
+              "Int"
+            ],
+            "advance": -20,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DW", "RT"]
           },
           "linguistics": {
             "label": "SKILL.LINGUISTICS",
@@ -486,7 +716,9 @@
                 "advance": -20,
                 "cost": 0
               }
-            }
+            },
+            "isBasic": false,
+            "inGames": ["DH2E", "RT", "BC"]
           },
           "logic": {
             "label": "SKILL.LOGIC",
@@ -497,7 +729,9 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
           },
           "medicae": {
             "label": "SKILL.MEDICAE",
@@ -509,7 +743,9 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
           },
           "navigate": {
             "label": "SKILL.NAVIGATE",
@@ -535,7 +771,9 @@
                 "advance": -20,
                 "cost": 0
               }
-            }
+            },
+            "isBasic": false,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
           },
           "operate": {
             "label": "SKILL.OPERATE",
@@ -561,7 +799,9 @@
                 "advance": -20,
                 "cost": 0
               }
-            }
+            },
+            "isBasic": false,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
           },
           "parry": {
             "label": "SKILL.PARRY",
@@ -571,7 +811,70 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DH2E", "BC"]
+          },
+          "performer": {
+            "label": "SKILL.PERFORMER",
+            "characteristics": [
+              "Fel"
+            ],
+            "advance": -20,
+            "isSpecialist": true,
+            "specialities": {
+              "dancer": {
+                "label": "Dancer",
+                "advance": -20,
+                "cost": 0
+              },
+              "musician": {
+                "label": "Musician",
+                "advance": -20,
+                "cost": 0
+              },
+              "singer": {
+                "label": "Singer",
+                "advance": -20,
+                "cost": 0
+              },
+              "storyteller": {
+                "label": "Storyteller",
+                "advance": -20,
+                "cost": 0
+              }
+            },
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DW", "RT"]
+          },
+          "pilot": {
+            "label": "SKILL.PILOT",
+            "characteristics": [
+              "Ag"
+            ],
+            "advance": -20,
+            "isSpecialist": true,
+            "specialities": {
+              "flyers": {
+                "label": "Flyers",
+                "advance": -20,
+                "cost": 0
+              },
+              "personal": {
+                "label": "Personal",
+                "advance": -20,
+                "cost": 0
+              },
+              "spaceCraft": {
+                "label": "Space Craft",
+                "advance": -20,
+                "cost": 0
+              }
+            },
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DW", "RT"]
           },
           "psyniscience": {
             "label": "SKILL.PSYNISCIENCE",
@@ -582,7 +885,9 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
           },
           "scholasticLore": {
             "label": "SKILL.SCHOLASTIC_LORE",
@@ -658,7 +963,9 @@
                 "advance": -20,
                 "cost": 0
               }
-            }
+            },
+            "isBasic": false,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
           },
           "scrutiny": {
             "label": "SKILL.SCRUTINY",
@@ -669,7 +976,21 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
+          },
+          "search": {
+            "label": "SKILL.SEARCH",
+            "characteristics": [
+              "Per"
+            ],
+            "advance": -20,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DW", "RT"]
           },
           "security": {
             "label": "SKILL.SECURITY",
@@ -680,7 +1001,34 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DH2E", "DW", "BC"]
+          },
+          "securityRT": {
+            "label": "SKILL.SECURITY",
+            "characteristics": [
+              "Ag",
+              "Int"
+            ],
+            "advance": -20,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["RT"]
+          },
+          "silentMove": {
+            "label": "SKILL.SILENT_MOVE",
+            "characteristics": [
+              "Ag"
+            ],
+            "advance": -20,
+            "isSpecialist": false,
+            "specialities": {},
+            "cost": 0,
+            "isBasic": true,
+            "inGames": ["DW", "RT"]
           },
           "sleightOfHand": {
             "label": "SKILL.SLEIGHT_OF_HAND",
@@ -691,7 +1039,57 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
+          },
+          "speakLanguage": {
+            "label": "SKILL.SPEAK_LANGUAGE",
+            "characteristics": [
+              "Int"
+            ],
+            "advance": -20,
+            "isSpecialist": true,
+            "specialities": {
+              "eldar": {
+                "label": "Eldar",
+                "advance": -20,
+                "cost": 0
+              },
+              "lowGothic": {
+                "label": "Low Gothic",
+                "advance": -20,
+                "cost": 0
+              },
+              "highGothic": {
+                "label": "High Gothic",
+                "advance": -20,
+                "cost": 0
+              },
+              "kroot": {
+               "label": "Kroot",
+               "advance": -20,
+               "cost": 0
+              },
+              "ork":{
+               "label": "Ork",
+               "advance": -20,
+               "cost": 0
+              },
+              "tau": {
+               "label": "Tau",
+               "advance": -20,
+               "cost": 0
+              },
+              "technaLingua": {
+               "label": "Techna-Lingua",
+               "advance": -20,
+               "cost": 0
+              }
+            },
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DW", "RT"]
           },
           "stealth": {
             "label": "SKILL.STEALTH",
@@ -702,7 +1100,9 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DH2E", "BC"]
           },
           "survival": {
             "label": "SKILL.SURVIVAL",
@@ -714,7 +1114,9 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
           },
           "techUse": {
             "label": "SKILL.TECH_USE",
@@ -725,7 +1127,9 @@
             "advance": -20,
             "isSpecialist": false,
             "specialities": {},
-            "cost": 0
+            "cost": 0,
+            "isBasic": false,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
           },
           "trade": {
             "label": "SKILL.TRADE",
@@ -832,7 +1236,9 @@
                 "advance": -20,
                 "cost": 0
               }
-            }
+            },
+            "isBasic": false,
+            "inGames": ["DH2E", "DW", "RT", "BC"]
           }
         }
       },
