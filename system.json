@@ -6,7 +6,7 @@
   "minimumCoreVersion": "0.8.4",
   "compatibleCoreVersion": "0.8.9",
   "templateVersion": 2,
-  "author": "JeansenVaars, Moo Man, fredthedeadhead, Perfectro, Vendare, Silver292",
+  "author": "JeansenVaars, Moo Man, fredthedeadhead, Perfectro, Vendare, Silver292, Makreig",
   "scripts": [],
   "esmodules": [
     "script/common/hooks.js"
