@@ -63,15 +63,21 @@ export class DarkHeresyActor extends Actor {
         for (let skill of Object.values(this.skills)) {
             let short = skill.characteristics[0];
             let characteristic = this._findCharacteristic(short)
-            if (game.settings.get('dark-heresy', 'useFirstEdSkills') && skill.isBasic && skill.advance == -20) {
-                skill.total = Math.ceil(characteristic.total/2);
+            if (game.settings.get('dark-heresy', 'useFirstEdSkills')) {
+                if (skill.isBasic && skill.advance == -20) {
+                  skill.total = Math.ceil(characteristic.total/2);
+                } else {
+                  skill.total = characteristic.total + skill.advance;
+                }
+                skill.isKnown = skill.advance >= 0 || skill.isBasic;
             } else {
                 skill.total = characteristic.total + skill.advance;
+                skill.isKnown = true;
             }
-            skill.advanceSkill = this._getAdvanceCharacteristic(skill.advance)
+            skill.advanceSkill = this._getAdvanceSkill(skill.advance)
             if (skill.isSpecialist) {
                 for (let speciality of Object.values(skill.specialities)) {
-                    if (game.settings.get('dark-heresy', 'useFirstEdSkills') && skill.isBasic && skill.advance == -20) {
+                    if (game.settings.get('dark-heresy', 'useFirstEdSkills')) {
                         if (skill.isBasic && skill.advance == -20) {
                             speciality.total = Math.ceil(characteristic.total/2);
                         } else {
