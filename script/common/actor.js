@@ -62,7 +62,7 @@ export class DarkHeresyActor extends Actor {
     _computeSkills() {
         for (let skill of Object.values(this.skills)) {
             let short = skill.characteristics[0];
-            let characteristic = this._findCharacteristic(data, short)
+            let characteristic = this._findCharacteristic(short)
             if (game.settings.get('dark-heresy', 'useFirstEdSkills') && skill.isBasic && skill.advance == -20) {
                 skill.total = Math.ceil(characteristic.total/2);
             } else {

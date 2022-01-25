@@ -36,7 +36,6 @@ export class DeathwatchSheet extends DarkHeresySheet {
         }
         data.data.skills = filterObject(skills);
         for (let skill of Object.values(skills)) {
-            console.log(skill);
             if (skill.inheritsFrom) {
                 console.log('do inheriting');
             }
