@@ -33,8 +33,14 @@ export class DeathwatchSheet extends DarkHeresySheet {
         function filterObject(skills, callback) {
             return Object.fromEntries(Object.entries(skills).
                 filter(skill => skill[1].inGames.includes('DW')))
-          }
+        }
         data.data.skills = filterObject(skills);
+        for (let skill of Object.values(skills)) {
+            console.log(skill);
+            if (skill.inheritsFrom) {
+                console.log('do inheriting');
+            }
+        }
         return data;
     }
 

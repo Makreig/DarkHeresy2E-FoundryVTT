@@ -1,18 +1,19 @@
 export class DarkHeresyActor extends Actor {
 
     async _preCreate(data, options, user) {
-        mergeObject(data, {
-            "token.bar1": { "attribute": "wounds" },
-            "token.bar2": { "attribute": "fatigue" },
-            "token.displayName": game.settings.get('dark-heresy', 'defaultTokenDisplay'),
-            "token.displayBars": CONST.TOKEN_DISPLAY_MODES.ALWAYS,
+        let initData = {
+            "token.bar1": { "attribute": "combat.wounds" },
+            "token.bar2": { "attribute": "combat.shock" },
+            "token.displayName": CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
+            "token.displayBars": CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             "token.disposition": CONST.TOKEN_DISPOSITIONS.NEUTRAL,
             "token.name": data.name
-        });
-        if (data.type === "acolyte") {
-            data.token.vision = true;
-            data.token.actorLink = true;
-        }
+          }
+          if (data.type === "agent") {
+            initData["token.vision"] =  true;
+            initData["token.actorLink"] = true;
+          }
+          this.data.update(initData)
     }
 
     prepareData() {
@@ -26,26 +27,40 @@ export class DarkHeresyActor extends Actor {
     }
 
     _computeCharacteristics() {
-        let data = this.data
-        let middle = Object.values(data.data.characteristics).length / 2;
+        let middle = Object.values(this.characteristics).length / 2;
         let i = 0;
-        for (let characteristic of Object.values(data.data.characteristics)) {
+        for (let characteristic of Object.values(this.characteristics)) {
             characteristic.total = characteristic.base + characteristic.advance;
             characteristic.bonus = Math.floor(characteristic.total / 10) + characteristic.unnatural;
+            if(this.fatigue.value > characteristic.bonus) {
+                characteristic.total = Math.ceil(characteristic.total / 2);
+                characteristic.bonus = Math.floor(characteristic.total / 10) + characteristic.unnatural;
+            }
             characteristic.isLeft = i < middle;
             characteristic.isRight = i >= middle;
             characteristic.advanceCharacteristic = this._getAdvanceCharacteristic(characteristic.advance)
             i++;
         }
-        data.data.insanityBonus = Math.floor(data.data.insanity / 10);
-        data.data.corruptionBonus = Math.floor(data.data.corruption / 10);
-        data.data.psy.currentRating = data.data.psy.rating - data.data.psy.sustained;
-        data.data.initiative.bonus = data.data.characteristics[data.data.initiative.characteristic].bonus;
+        this.data.data.insanityBonus = Math.floor(this.insanity / 10);
+        this.data.data.corruptionBonus = Math.floor(this.corruption / 10);
+        this.psy.currentRating = this.psy.rating - this.psy.sustained;
+        this.initiative.bonus = this.characteristics[this.initiative.characteristic].bonus;
+        // done as variables to make it easier to read & understand
+        let tb = Math.floor(
+            ( this.characteristics.toughness.base
+            + this.characteristics.toughness.advance) / 10);
+
+        let wb = Math.floor(
+            ( this.characteristics.willpower.base
+            + this.characteristics.willpower.advance) / 10);
+
+        //the only thing not affected by itself
+        this.fatigue.max = tb + wb;
+
     }
 
     _computeSkills() {
-        let data = this.data
-        for (let skill of Object.values(data.data.skills)) {
+        for (let skill of Object.values(this.skills)) {
             let short = skill.characteristics[0];
             let characteristic = this._findCharacteristic(data, short)
             if (game.settings.get('dark-heresy', 'useFirstEdSkills') && skill.isBasic && skill.advance == -20) {
@@ -57,66 +72,66 @@ export class DarkHeresyActor extends Actor {
             if (skill.isSpecialist) {
                 for (let speciality of Object.values(skill.specialities)) {
                     if (game.settings.get('dark-heresy', 'useFirstEdSkills') && skill.isBasic && skill.advance == -20) {
-                        speciality.total = Math.ceil(characteristic.total/2);
+                        if (skill.isBasic && skill.advance == -20) {
+                            speciality.total = Math.ceil(characteristic.total/2);
+                        } else {
+                            speciality.total = characteristic.total + speciality.advance;
+                        }
                     } else {
                         speciality.total = characteristic.total + speciality.advance;
                     }
                     speciality.isKnown = speciality.advance >= 0;
-                    skill.advanceSpec = this._getAdvanceCharacteristic(speciality.advance)
+                    skill.advanceSpec = this._getAdvanceSkill(speciality.advance)
                 }
             }
-
         }
     }
 
     _computeItems() {
-        let data = this.data
         let encumbrance = 0;
         for (let item of this.items) {
 
-            if (item.data.data.hasOwnProperty('weight')) {
-                encumbrance = encumbrance + item.data.data.weight;
+            if (item.weight) {
+                encumbrance = encumbrance + item.weight;
             }
         }
         this._computeEncumbrance(encumbrance);
     }
 
     _computeExperience() {
-        let data = this.data
-        data.data.experience.spentCharacteristics = 0;
-        data.data.experience.spentSkills = 0;
-        data.data.experience.spentTalents = 0;
-        data.data.experience.spentPsychicPowers = data.data.psy.cost;
-        for (let characteristic of Object.values(data.data.characteristics)) {
-            data.data.experience.spentCharacteristics += parseInt(characteristic.cost, 10);
+        this.experience.spentCharacteristics = 0;
+        this.experience.spentSkills = 0;
+        this.experience.spentTalents = 0;
+        this.experience.spentPsychicPowers = this.psy.cost;
+        for (let characteristic of Object.values(this.characteristics)) {
+            this.experience.spentCharacteristics += parseInt(characteristic.cost, 10);
         }
-        for (let skill of Object.values(data.data.skills)) {
+        for (let skill of Object.values(this.skills)) {
             if (skill.isSpecialist) {
                 for (let speciality of Object.values(skill.specialities)) {
-                    data.data.experience.spentSkills += parseInt(speciality.cost, 10);
+                    this.experience.spentSkills += parseInt(speciality.cost, 10);
                 }
             } else {
-                data.data.experience.spentSkills += parseInt(skill.cost, 10);
+                this.experience.spentSkills += parseInt(skill.cost, 10);
             }
         }
         for (let item of this.items) {
             if (item.isTalent) {
-                data.data.experience.spentTalents += parseInt(item.data.data.cost, 10);
+                this.experience.spentTalents += parseInt(item.cost, 10);
             } else if (item.isPsychicPower) {
-                data.data.experience.spentPsychicPowers += parseInt(item.data.data.cost, 10);
+                this.experience.spentPsychicPowers += parseInt(item.cost, 10);
             }
         }
-        data.data.experience.totalSpent = data.data.experience.spentCharacteristics + data.data.experience.spentSkills + data.data.experience.spentTalents + data.data.experience.spentPsychicPowers;
-        data.data.experience.total = data.data.experience.value + data.data.experience.totalSpent;
+        this.experience.totalSpent = this.experience.spentCharacteristics + this.experience.spentSkills + this.experience.spentTalents + this.experience.spentPsychicPowers;
+        this.experience.total = this.experience.value + this.experience.totalSpent;
     }
 
     _computeArmour() {
-        let data = this.data
         let locations = game.system.template.Item.armour.part;
 
-        let toughness = data.data.characteristics.toughness;
+        let toughness = this.characteristics.toughness;
 
-        data.data.armour =
+        this.data.data.armour =
             Object.keys(locations)
                 .reduce((accumulator, location) =>
                     Object.assign(accumulator,
@@ -134,12 +149,12 @@ export class DarkHeresyActor extends Actor {
                 Object.assign(acc, { [location]: 0 }), {})
 
         // for each item, find the maximum armour val per location
-        data.items
+        this.items
             .filter(item => item.type === "armour")
             .reduce((acc, armour) => {
                 Object.keys(locations)
                     .forEach((location) => {
-                        let armourVal = armour.data.part[location] || 0;
+                        let armourVal = armour.part[location] || 0;
                         if (armourVal > acc[location]) {
                             acc[location] = armourVal;
                         }
@@ -148,36 +163,34 @@ export class DarkHeresyActor extends Actor {
                 return acc;
             }, maxArmour);
 
-        data.data.armour.head.value = maxArmour["head"];
-        data.data.armour.leftArm.value = maxArmour["leftArm"];
-        data.data.armour.rightArm.value = maxArmour["rightArm"];
-        data.data.armour.body.value = maxArmour["body"];
-        data.data.armour.leftLeg.value = maxArmour["leftLeg"];
-        data.data.armour.rightLeg.value = maxArmour["rightLeg"];
+        this.armour.head.value = maxArmour["head"];
+        this.armour.leftArm.value = maxArmour["leftArm"];
+        this.armour.rightArm.value = maxArmour["rightArm"];
+        this.armour.body.value = maxArmour["body"];
+        this.armour.leftLeg.value = maxArmour["leftLeg"];
+        this.armour.rightLeg.value = maxArmour["rightLeg"];
 
-        data.data.armour.head.total += data.data.armour.head.value;
-        data.data.armour.leftArm.total += data.data.armour.leftArm.value;
-        data.data.armour.rightArm.total += data.data.armour.rightArm.value;
-        data.data.armour.body.total += data.data.armour.body.value;
-        data.data.armour.leftLeg.total += data.data.armour.leftLeg.value;
-        data.data.armour.rightLeg.total += data.data.armour.rightLeg.value;
+        this.armour.head.total += this.armour.head.value;
+        this.armour.leftArm.total += this.armour.leftArm.value;
+        this.armour.rightArm.total += this.armour.rightArm.value;
+        this.armour.body.total += this.armour.body.value;
+        this.armour.leftLeg.total += this.armour.leftLeg.value;
+        this.armour.rightLeg.total += this.armour.rightLeg.value;
     }
 
     _computeMovement() {
-        let data = this.data
-        let agility = data.data.characteristics.agility;
-        let size = data.data.size;
-        data.data.movement = {
-            half: agility.bonus + (size - 4),
-            full: (agility.bonus * 2) + (size - 4),
-            charge: (agility.bonus * 3) + (size - 4),
-            run: (agility.bonus * 6) + (size - 4)
+        let agility = this.characteristics.agility;
+        let size = this.size;
+        this.data.data.movement = {
+            half: agility.bonus + size - 4,
+            full: (agility.bonus + size - 4) * 2,
+            charge: (agility.bonus  + size - 4) * 3,
+            run: (agility.bonus + size - 4) * 6
         }
     }
 
     _findCharacteristic(short) {
-        let data = this.data
-        for (let characteristic of Object.values(data.data.characteristics)) {
+        for (let characteristic of Object.values(this.characteristics)) {
             if (characteristic.short === short) {
                 return characteristic;
             }
@@ -186,78 +199,77 @@ export class DarkHeresyActor extends Actor {
     }
 
     _computeEncumbrance(encumbrance) {
-        let data = this.data
-        const attributeBonus = data.data.characteristics.strength.bonus + data.data.characteristics.toughness.bonus;
-        data.data.encumbrance = {
+        const attributeBonus = this.characteristics.strength.bonus + this.characteristics.toughness.bonus;
+        this.data.data.encumbrance = {
             max: 0,
             value: encumbrance
         };
         switch (attributeBonus) {
             case 0:
-                data.data.encumbrance.max = 0.9;
+                this.encumbrance.max = 0.9;
                 break
             case 1:
-                data.data.encumbrance.max = 2.25;
+                this.encumbrance.max = 2.25;
                 break
             case 2:
-                data.data.encumbrance.max = 4.5;
+                this.encumbrance.max = 4.5;
                 break
             case 3:
-                data.data.encumbrance.max = 9;
+                this.encumbrance.max = 9;
                 break
             case 4:
-                data.data.encumbrance.max = 18;
+                this.encumbrance.max = 18;
                 break
             case 5:
-                data.data.encumbrance.max = 27;
+                this.encumbrance.max = 27;
                 break
             case 6:
-                data.data.encumbrance.max = 36;
+                this.encumbrance.max = 36;
                 break
             case 7:
-                data.data.encumbrance.max = 45;
+                this.encumbrance.max = 45;
                 break
             case 8:
-                data.data.encumbrance.max = 56;
+                this.encumbrance.max = 56;
                 break
             case 9:
-                data.data.encumbrance.max = 67;
+                this.encumbrance.max = 67;
                 break
             case 10:
-                data.data.encumbrance.max = 78;
+                this.encumbrance.max = 78;
                 break
             case 11:
-                data.data.encumbrance.max = 90;
+                this.encumbrance.max = 90;
                 break
             case 12:
-                data.data.encumbrance.max = 112;
+                this.encumbrance.max = 112;
                 break
             case 13:
-                data.data.encumbrance.max = 225;
+                this.encumbrance.max = 225;
                 break
             case 14:
-                data.data.encumbrance.max = 337;
+                this.encumbrance.max = 337;
                 break
             case 15:
-                data.data.encumbrance.max = 450;
+                this.encumbrance.max = 450;
                 break
             case 16:
-                data.data.encumbrance.max = 675;
+                this.encumbrance.max = 675;
                 break
             case 17:
-                data.data.encumbrance.max = 900;
+                this.encumbrance.max = 900;
                 break
             case 18:
-                data.data.encumbrance.max = 1350;
+                this.encumbrance.max = 1350;
                 break
             case 19:
-                data.data.encumbrance.max = 1800;
+                this.encumbrance.max = 1800;
                 break
             case 20:
-                data.data.encumbrance.max = 2250;
+                this.encumbrance.max = 2250;
                 break
             default:
-                data.data.encumbrance.max = 2250;
+                this.encumbrance.max = 2250;
                 break
         }
     }
@@ -282,7 +294,7 @@ export class DarkHeresyActor extends Actor {
             return "N";
         }
     }
-    
+
     _getAdvanceSkill(skill)
     {
         switch (skill || 0) {
@@ -313,62 +325,46 @@ export class DarkHeresyActor extends Actor {
      * @return {Promise<Actor>}             A Promise which resolves once the damage has been applied
      */
     async applyDamage(damages) {
-        let wounds = this.data.data.wounds.value;
-        let criticalWounds = this.data.data.wounds.critical;
-        const dmgRolls = []
-        const maxWounds = this.data.data.wounds.max;
+        let wounds = this.wounds.value;
+        let criticalWounds = this.wounds.critical;
+        const damageTaken = []
+        const maxWounds = this.wounds.max;
 
         // apply damage from multiple hits
         for (const damage of damages) {
-            // get the armour for the location and minus penetration
-            let armour = this._getArmour(damage.location) - Number(damage.penetration)
+            // get the armour for the location and minus penetration, no negatives
+            let armour = Math.max(this._getArmour(damage.location) - Number(damage.penetration), 0)
+            // reduce damage by toughness bonus
+            const damageMinusToughness = Math.max(Number(damage.amount) - this.data.data.characteristics.toughness.bonus, 0)
 
-            // calculate wounds to add
-            let woundsToAdd = Math.max(Number(damage.amount) - armour, 0)
+            // calculate wounds to add, reducing damage by armour after pen
+            let woundsToAdd = Math.max(damageMinusToughness - armour, 0)
 
             // If no wounds inflicted and righteous fury was rolled, attack causes one wound
             if (damage.righteousFury && woundsToAdd === 0) {
                 woundsToAdd = 1
             } else if (damage.righteousFury) {
                 // roll on crit table but don't add critical wounds
-                dmgRolls.push({
-                    appliedDmg: damage.righteousFury,
-                    type: damage.type,
-                    source: 'Critical Effect (RF)'
-                })
+                this._recordDamage(damageTaken, damage.righteousFury, damage, 'Critical Effect (RF)')
             }
 
             // check for critical wounds
             if (wounds === maxWounds) {
                 // all new wounds are critical
                 criticalWounds += woundsToAdd;
-                dmgRolls.push({
-                    appliedDmg: woundsToAdd,
-                    type: damage.type,
-                    source: 'Critical Damage'
-                })
+                this._recordDamage(damageTaken, woundsToAdd, damage, 'Critical')
+
             } else if (wounds + woundsToAdd > maxWounds) {
                 // will bring wounds to max and add left overs as crits
-                dmgRolls.push({
-                    appliedDmg: maxWounds - wounds,
-                    type: damage.type,
-                    source: 'Wounds'
-                })
+                this._recordDamage(damageTaken, maxWounds - wounds, damage, 'Wounds')
+
                 woundsToAdd = (wounds + woundsToAdd) - maxWounds;
                 criticalWounds += woundsToAdd;
                 wounds = maxWounds;
-                dmgRolls.push({
-                    appliedDmg: woundsToAdd,
-                    type: damage.type,
-                    source: 'Critical'
-                });
+                this._recordDamage(damageTaken, woundsToAdd, damage, 'Critical')
             } else {
-                dmgRolls.push({
-                    appliedDmg: woundsToAdd,
-                    type: damage.type,
-                    source: 'Wounds'
-                })
-                wounds += woundsToAdd
+                this._recordDamage(damageTaken, woundsToAdd, damage, 'Wounds');
+                wounds += woundsToAdd;
             }
         }
 
@@ -381,34 +377,56 @@ export class DarkHeresyActor extends Actor {
         // Delegate damage application to a hook
         const allowed = Hooks.call("modifyTokenAttribute", {
             attribute: "wounds.value",
-            value: this.data.data.wounds.value,
+            value: this.wounds.value,
             isDelta: false,
             isBar: true
         }, updates);
 
-        await this._showCritMessage(dmgRolls, this.name, wounds, criticalWounds)
+        await this._showCritMessage(damageTaken, this.name, wounds, criticalWounds);
         return allowed !== false ? this.update(updates) : this;
     }
 
     /**
-     * Gets the armour value for a non-localized location string
+     * Records damage to be shown as in chat
+     * @param {Object[]} damageRolls array to record damages
+     * @param {number} damageRolls.damage amount of damage dealt
+     * @param {string} damageRolls.source source of the damage e.g. Critical
+     * @param {string} damageRolls.location location taking the damage
+     * @param {string} damageRolls.type type of the damage
+     * @param {number} damage amount of damage dealt
+     * @param {Object} damageObject damage object containing location and type
+     * @param {string} damageObject.location damage location
+     * @param {string} damageObject.type damage type
+     * @param {string} source source of the damage
+     */
+    _recordDamage(damageRolls, damage, damageObject, source) {
+        damageRolls.push({
+            damage,
+            source,
+            location: damageObject.location,
+            type: damageObject.type
+        })
+    }
+
+    /**
+     * Gets the armour value not including toughness bonus for a non-localized location string
      * @param {string} location
      * @returns {number} armour value for the location
      */
     _getArmour(location) {
         switch (location) {
             case "ARMOUR.HEAD":
-                return this.data.data.armour.head.total;
+                return this.armour.head.value;
             case "ARMOUR.LEFT_ARM":
-                return this.data.data.armour.leftArm.total;
+                return this.armour.leftArm.value;
             case "ARMOUR.RIGHT_ARM":
-                return this.data.data.armour.rightArm.total;
+                return this.armour.rightArm.value;
             case "ARMOUR.BODY":
-                return this.data.data.armour.body.total;
+                return this.armour.body.value;
             case "ARMOUR.LEFT_LEG":
-                return this.data.data.armour.leftLeg.total;
+                return this.armour.leftLeg.value;
             case "ARMOUR.RIGHT_LEG":
-                return this.data.data.armour.rightLeg.total;
+                return this.armour.rightLeg.value;
             default:
                 return 0;
         }
@@ -418,7 +436,7 @@ export class DarkHeresyActor extends Actor {
      * Helper to show that an effect from the critical table needs to be applied.
      * TODO: This needs styling, rewording and ideally would roll on the crit tables for you
      * @param {Object[]} rolls Array of critical rolls
-     * @param {number} rolls.appliedDmg Number rolled on the crit table
+     * @param {number} rolls.damage Damage applied
      * @param {string} rolls.type Letter representing the damage type
      * @param {string} rolls.source What kind of damage represented
      * @param {string} rolls.location Where this damage applied against for armor and AP considerations
@@ -426,12 +444,33 @@ export class DarkHeresyActor extends Actor {
     async _showCritMessage(rolls, target, totalWounds, totalCritWounds) {
         if (rolls.length === 0) return;
         const html = await renderTemplate("systems/dark-heresy/template/chat/critical.html", {
-            rolls: rolls,
-            target: target,
-            totalWounds: totalWounds,
-            totalCritWounds: totalCritWounds
+            rolls,
+            target,
+            totalWounds,
+            totalCritWounds
         })
         ChatMessage.create({ content: html });
     }
+
+    get characteristics() {return this.data.data.characteristics}
+    get skills() {return this.data.data.skills}
+    get initiative() {return this.data.data.initiative}
+    get wounds() {return this.data.data.wounds}
+    get fatigue() {return this.data.data.fatigue}
+    get fate() {return this.data.data.fate}
+    get psy() {return this.data.data.psy}
+    get bio() {return this.data.data.bio}
+    get experience() {return this.data.data.experience}
+    get insanity() {return this.data.data.insanity}
+    get corruption() {return this.data.data.corruption}
+    get aptitudes() {return this.data.data.aptitudes}
+    get size() {return this.data.data.size}
+    get faction() {return this.data.data.faction}
+    get subfaction() {return this.data.data.subfaction}
+    get subtype() {return this.data.data.type}
+    get threatLevel() {return this.data.data.threatLevel}
+    get armour() {return this.data.data.armour}
+    get encumbrance() {return this.data.data.encumbrance}
+    get movement() {return this.data.data.movement}
 
 }

@@ -49,16 +49,18 @@ export class DarkHeresySheet extends ActorSheet {
 
   _onItemCreate(event) {
     event.preventDefault();
-    let header = event.currentTarget;
-    let data = foundry.utils.deepClone(header.dataset);
-    data["name"] = `New ${data.type.capitalize()}`;
-    this.actor.createEmbeddedDocuments("Item", [data], {renderSheet: true});
-  }
-
+    let header = event.currentTarget.dataset
+    
+    let data = {
+         name : `New ${game.i18n.localize("ITEM.Type" + header.type.toLowerCase().capitalize())}`,
+         type : header.type
+    };
+    this.actor.createEmbeddedDocuments("Item", [data], { renderSheet: true });
+}
   _onItemEdit(event) {
     event.preventDefault();
     const div = $(event.currentTarget).parents(".item");
-    const item = this.actor.getEmbeddedDocument("Item",div.data("itemId"));
+    let item = this.actor.items.get(div.data("itemId"));
     item.sheet.render(true);
   }
 
@@ -85,7 +87,7 @@ export class DarkHeresySheet extends ActorSheet {
   async _prepareRollCharacteristic(event) {
     event.preventDefault();
     const characteristicName = $(event.currentTarget).data("characteristic");
-    const characteristic = this.actor.data.data.characteristics[characteristicName];
+    const characteristic = this.actor.characteristics[characteristicName];
     const rollData = {
       name: characteristic.label,
       baseTarget: characteristic.total,
@@ -96,7 +98,7 @@ export class DarkHeresySheet extends ActorSheet {
 
   _getCharacteristicOptions (selected) {
     const characteristics = []
-    for (let char of Object.values(this.actor.data.data.characteristics)) {
+    for (let char of Object.values(this.actor.characteristics)) {
       characteristics.push({
         label: char.label,
         target: char.total,
@@ -109,7 +111,7 @@ export class DarkHeresySheet extends ActorSheet {
   async _prepareRollSkill(event) {
     event.preventDefault();
     const skillName = $(event.currentTarget).data("skill");
-    const skill = this.actor.data.data.skills[skillName];
+    const skill = this.actor.skills[skillName];
     const defaultChar = skill.defaultCharacteristic || skill.characteristics[0]
 
     let characteristics = this._getCharacteristicOptions(defaultChar)
@@ -144,7 +146,7 @@ export class DarkHeresySheet extends ActorSheet {
     event.preventDefault();
     const skillName = $(event.currentTarget).parents(".item").data("skill");
     const specialityName = $(event.currentTarget).data("speciality");
-    const skill = this.actor.data.data.skills[skillName];
+    const skill = this.actor.skills[skillName];
     const speciality = skill.specialities[specialityName];
     const rollData = {
       name: speciality.label,
@@ -156,7 +158,7 @@ export class DarkHeresySheet extends ActorSheet {
 
   async _prepareRollInsanity(event) {
     event.preventDefault();
-    const characteristic = this.actor.data.data.characteristics.willpower;
+    const characteristic = this.actor.characteristics.willpower;
     const rollData = {
       name: "FEAR.HEADER",
       baseTarget: characteristic.total,
@@ -167,7 +169,7 @@ export class DarkHeresySheet extends ActorSheet {
 
   async _prepareRollCorruption(event) {
     event.preventDefault();
-    const characteristic = this.actor.data.data.characteristics.willpower;
+    const characteristic = this.actor.characteristics.willpower;
     const rollData = {
       name: "CORRUPTION.HEADER",
       baseTarget: characteristic.total,
@@ -179,29 +181,31 @@ export class DarkHeresySheet extends ActorSheet {
   async _prepareRollWeapon(event) {
     event.preventDefault();
     const div = $(event.currentTarget).parents(".item");
-    const weapon = this.actor.getEmbeddedDocument("Item",div.data("itemId"));
+    const weapon = this.actor.items.get(div.data("itemId"));
     let characteristic = this._getWeaponCharacteristic(weapon);
     let rateOfFire;
-    if (weapon.data.data.class === "melee") {
+    if (weapon.class === "melee") {
       rateOfFire = {burst: characteristic.bonus, full: characteristic.bonus};
     } else {
-      rateOfFire = {burst: weapon.data.data.rateOfFire.burst, full: weapon.data.data.rateOfFire.full};
+      rateOfFire = {burst: weapon.rateOfFire.burst, full: weapon.rateOfFire.full};
     }
+    let isMelee = weapon.class === "melee"
     let rollData = {
-      wid: weapon.id,
+      item: weapon,
       name: weapon.name,
-      baseTarget: characteristic.total + weapon.data.data.attack,
+      baseTarget: characteristic.total + weapon.attack,
       modifier: 0,
-      isMelee: weapon.data.data.class === "melee",
-      isRange: !(weapon.data.data.class === "melee"),
-      clip: weapon.data.data.clip,
-      damageFormula: weapon.data.data.damage,
-      damageBonus: (weapon.data.data.class === "melee") ? this.actor.data.data.characteristics.strength.bonus : 0,
-      damageType: weapon.data.data.damageType,
-      penetrationFormula: weapon.data.data.penetration,
+      attributeBoni: this._getAttributeBoni(),
+      isMelee: isMelee,
+      isRange: !isMelee,
+      clip: weapon.clip,
+      damageFormula: weapon.damage + (isMelee && !weapon.damage.toUpperCase().includes("SB") ? "+SB" : ""),
+      damageBonus: 0,
+      damageType: weapon.damageType,
+      penetrationFormula: weapon.penetration,
       rateOfFire: rateOfFire,
-      special: weapon.data.data.special,
-      psy: {value: this.actor.data.data.psy.rating, display: false},
+      special: weapon.special,
+      psy: { value: this.actor.psy.rating, display: false}
     };
     await prepareCombatRoll(rollData, this.actor);
   }
@@ -209,24 +213,37 @@ export class DarkHeresySheet extends ActorSheet {
   async _prepareRollPsychicPower(event) {
     event.preventDefault();
     const div = $(event.currentTarget).parents(".item");
-    const psychicPower = this.actor.getEmbeddedDocument("Item",div.data("itemId"));
-    let characteristic = this._getPsychicPowerCharacteristic(psychicPower);
+    const psychicPower = this.actor.items.get(div.data("itemId"));
+    let focusPowerTarget = this._getFocusPowerTarget(psychicPower);
     const rollData = {
       name: psychicPower.name,
-      baseTarget: characteristic.total,
-      modifier: psychicPower.data.data.focusPower.difficulty,
-      damageFormula: psychicPower.data.data.damage.formula,
-      psy: {value: 1, max: this.actor.data.data.psy.rating, display: true},
-      damageType: psychicPower.data.data.damage.type,
+      baseTarget: focusPowerTarget.total,
+      modifier: psychicPower.focusPower.difficulty,
+      attributeBoni: this._getAttributeBoni(),
+      damageFormula: psychicPower.damage.formula,
+      psy: { value: this.actor.psy.rating, rating: this.actor.psy.rating, max: this._getMaxPsyRating(), warpConduit:false, display: true},
+      damageType: psychicPower.damage.type,
       damageBonus: 0,
-      penetrationFormula: psychicPower.data.data.damage.penetration,
-      attackType: {name: psychicPower.data.data.zone}
+      penetrationFormula: psychicPower.damage.penetration,
+      attackType: { name: psychicPower.damage.zone, text: "" }
     };
     await preparePsychicPowerRoll(rollData);
   }
 
+  _getMaxPsyRating() {
+    let base = this.actor.psy.rating
+    switch(this.actor.psy.class) {
+      case "bound" :
+        return base + 2;
+      case "unbound" :
+        return base + 4;
+      case "daemonic" :
+        return base + 3;
+    }
+  }
+
   _getCorruptionModifier() {
-    const corruption = this.actor.data.data.corruption;
+    const corruption = this.actor.corruption;
     if (corruption <= 30) {
       return 0;
     } else if (corruption >= 31 && corruption <= 60) {
@@ -239,19 +256,30 @@ export class DarkHeresySheet extends ActorSheet {
   }
 
   _getWeaponCharacteristic(weapon) {
-    if (weapon.data.data.class === "melee") {
-      return this.actor.data.data.characteristics.weaponSkill;
+    if (weapon.class === "melee") {
+      return this.actor.characteristics.weaponSkill;
     } else {
-      return this.actor.data.data.characteristics.ballisticSkill;
+      return this.actor.characteristics.ballisticSkill;
     }
   }
 
-  _getPsychicPowerCharacteristic(psychicPower) {
-    const normalizeName = psychicPower.data.data.focusPower.test.toLowerCase();
-    if (this.actor.data.data.characteristics.hasOwnProperty(normalizeName)) {
-      return this.actor.data.data.characteristics[normalizeName];
-    } else {
-      return this.actor.data.data.characteristics.willpower;
+  _getFocusPowerTarget(psychicPower) {
+    const normalizeName = psychicPower.focusPower.test.toLowerCase();
+    if (this.actor.characteristics.hasOwnProperty(normalizeName)) {
+      return this.actor.characteristics[normalizeName];
+    } else if(this.actor.skills.hasOwnProperty(normalizeName)) {
+      return this.actor.skills[normalizeName];
+    } else {      
+      return this.actor.characteristics.willpower;
     }
+  }
+
+  _getAttributeBoni() {
+    let boni = [];
+    for(let characteristic of Object.values(this.actor.characteristics)) {
+      boni.push( {regex: new RegExp(`${characteristic.short}B`,'gi'), value: characteristic.bonus} )
+    }
+    return boni;
+    
   }
 }
