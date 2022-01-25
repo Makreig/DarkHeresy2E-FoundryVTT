@@ -107,7 +107,7 @@ Hooks.once("init", () => {
     });
     game.settings.register("dark-heresy", "useFirstEdSkills", {
         name: "Use 1st edition skills rolls",
-        hint: "Use basic and advanced skills rules from first edition",
+        hint: "Use basic and advanced skills rules from first edition (requires restart)",
         scope: "world",
         config: true,
         type: Boolean,

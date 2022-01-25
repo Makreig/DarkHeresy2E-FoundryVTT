@@ -72,7 +72,7 @@ export class DarkHeresyActor extends Actor {
                 skill.isKnown = skill.advance >= 0 || skill.isBasic;
             } else {
                 skill.total = characteristic.total + skill.advance;
-                skill.isKnown = true;
+                skill.isKnown = 1;
             }
             skill.advanceSkill = this._getAdvanceSkill(skill.advance)
             if (skill.isSpecialist) {
