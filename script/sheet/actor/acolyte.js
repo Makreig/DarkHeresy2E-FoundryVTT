@@ -29,7 +29,7 @@ export class AcolyteSheet extends DarkHeresySheet {
 
     getData() {
         const data = super.getData();
-        //data.data.skills = data.data.skills.filter(skill => skill.inGames.includes('DH2E'));
+        data.data.skills = data.data.skills.filter(skill => skill.inGames.includes('DH2E'));
         return data;
     }
 

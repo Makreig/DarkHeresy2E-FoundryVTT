@@ -118,7 +118,8 @@ export class DarkHeresySheet extends ActorSheet {
     characteristics = characteristics.map((char) => {
       if (game.settings.get('dark-heresy', 'useFirstEdSkills')) {
         if (skill.isBasic && skill.advance == -20) {
-          char.target = ceil(char.target/2);
+          console.log(Math.ceil(char.target/2));
+          char.target = Math.ceil(char.target/2);
         } else if (skill.advance != -20) {
           char.target += skill.advance
         } else {
@@ -130,6 +131,8 @@ export class DarkHeresySheet extends ActorSheet {
       }
       return char
     })
+
+    console.log(skill);
 
     const rollData = {
       name: skill.label,
