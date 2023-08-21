@@ -11,7 +11,7 @@
     "@babel/eslint-parser": "^7.22.5",
     "@league-of-foundry-developers/foundry-vtt-types": "^9.280.0",
     "@rollup/plugin-node-resolve": "^15.1.0",
-	"rollup":"^3.25.1",
+    "rollup": "^3.25.1",
     "eslint-plugin-jsdoc": "^46.2.6",
     "gulp": "^4.0.2",
     "gulp-eslint-new": "^1.8.0",
@@ -21,5 +21,20 @@
     "nedb": "^1.8.0",
     "through2": "^4.0.2",
     "yargs": "^17.7.2"
-  }
+  },
+  "name": "deathwatch",
+  "description": "An **UNOFFICIAL** system for playing Dark Heresy 2E on [Foundry VTT](https://foundryvtt.com/).",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Makreig/DarkHeresy2E-FoundryVTT.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Makreig/DarkHeresy2E-FoundryVTT/issues"
+  },
+  "homepage": "https://github.com/Makreig/DarkHeresy2E-FoundryVTT#readme"
 }

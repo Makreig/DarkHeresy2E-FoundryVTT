@@ -1,5 +1,5 @@
 {
-  "id": "Deathwatch",
+  "id": "deathwatch",
   "title": "Deathwatch",
   "description": "Innocence proves nothing",
   "version": "4.2.6",
@@ -67,7 +67,6 @@
     }
   ],
   "system": [],
-  "dependencies": [],
   "socket": true,
   "protected": false,
   "gridDistance": 1,
