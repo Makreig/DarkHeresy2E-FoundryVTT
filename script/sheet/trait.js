@@ -4,7 +4,7 @@ export class TraitSheet extends DarkHeresyItemSheet {
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
             classes: ["dark-heresy", "sheet", "trait"],
-            template: "systems/dark-heresy/template/sheet/trait.html",
+            template: "systems/dark-heresy/template/sheet/trait.hbs",
             width: 500,
             height: 369,
             resizable: false,
@@ -12,15 +12,10 @@ export class TraitSheet extends DarkHeresyItemSheet {
                 {
                     navSelector: ".sheet-tabs",
                     contentSelector: ".sheet-body",
-                    initial: "stats",
-                },
+                    initial: "stats"
+                }
             ]
         });
-    }
-
-    getData() {
-        const data = super.getData();
-        return data;
     }
 
     _getHeaderButtons() {

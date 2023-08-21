@@ -1,55 +1,48 @@
 {
-  "name": "dark-heresy",
-  "title": "Dark Heresy 2E",
+  "id": "Deathwatch",
+  "title": "Deathwatch",
   "description": "Innocence proves nothing",
-  "authors": [],
-  "url": "https://github.com/moo-man/DarkHeresy2E-FoundryVTT",
-  "flags": {},
-  "version": "3.1.0",
-  "minimumCoreVersion": "0.8.4",
-  "compatibleCoreVersion": "0.8.9",
+  "version": "4.2.6",
+  "minimumCoreVersion" : 11,
+  "compatibility" : {
+    "minimum" : 11,
+    "verified" : 11,
+    "maximum" : 11
+  },
   "templateVersion": 2,
-  "author": "JeansenVaars, Moo Man, fredthedeadhead, Perfectro, Vendare, Silver292, Makreig",
+  "authors": [
+	  { "name":"JeansenVaars" }, 
+    { "name":"Moo Man",
+      "email": "russellt@cubicle7games.com",
+      "discord": "Moo Man#7518",
+      "reddit": "u/mooman10" }, 
+    { "name":"fredthedeadhead" },
+    { "name":"Perfectro" }, 
+    { "name":"Vendare" },
+    { "name":"Silver292" },
+    { "name":"Giddy" },
+    { "name":"Dazzerix" },
+	  { "name":"FilippoPolo" },
+    {
+      "name":"Makreig",
+      "email":"grymlock@hotmail.com"
+    }
+  ],
   "scripts": [],
   "esmodules": [
-    "script/common/hooks.js"
+    "script/dark-heresy.js"
   ],
   "styles": [
-    "style/common/variable.css",
-    "style/common/helper.css",
-    "style/common/override.css",
-    "style/chat/chat.css",
-    "style/dialog/dialog.css",
-    "style/sheet/item.css",
-    "style/sheet/mental-disorder.css",
-    "style/sheet/malignancy.css",
-    "style/sheet/mutation.css",
-    "style/sheet/talent.css",
-    "style/sheet/trait.css",
-    "style/sheet/special-ability.css",
-    "style/sheet/psychic-power.css",
-    "style/sheet/critical-injury.css",
-    "style/sheet/weapon.css",
-    "style/sheet/armour.css",
-    "style/sheet/gear.css",
-    "style/sheet/drug.css",
-    "style/sheet/tool.css",
-    "style/sheet/cybernetic.css",
-    "style/sheet/weapon-modification.css",
-    "style/sheet/ammunition.css",
-    "style/sheet/force-field.css",
-    "style/sheet/actor/actor.css",
-    "style/sheet/actor/acolyte.css",
-    "style/sheet/actor/npc.css",
-    "style/sheet/actor/limited-sheet.css",
-    "style/sheet/actor/tab/stats.css",
-    "style/sheet/actor/tab/npc-stats.css",
-    "style/sheet/actor/tab/combat.css",
-    "style/sheet/actor/tab/abilities.css",
-    "style/sheet/actor/tab/psychic-powers.css",
-    "style/sheet/actor/tab/gear.css",
-    "style/sheet/actor/tab/progression.css",
-    "style/sheet/actor/tab/notes.css"
+    "css/dark-heresy.css"
+  ],
+  "packs": [
+    {
+      "name": "character-aptitudes",
+      "label": "Character Aptitudes",
+      "system": "dark-heresy",
+      "path": "./packs/aptitudes.db",
+      "type": "Item"
+    }
   ],
   "languages": [
     {
@@ -66,16 +59,11 @@
       "lang": "fr",
       "name": "Français",
       "path": "lang/fr.json"
-    }
-  ],
-  "packs": [
-    {
-      "name": "character-aptitudes",
-      "label": "Character Aptitudes",
-      "system": "dark-heresy",
-      "path": "./packs/character/aptitudes.db",
-      "entity": "Item",
-      "private": false
+    },
+	  {
+      "lang": "pl",
+      "name": "Polski",
+      "path": "lang/pl.json"
     }
   ],
   "system": [],
@@ -84,7 +72,10 @@
   "protected": false,
   "gridDistance": 1,
   "gridUnits": "m",
-  "manifest": "https://raw.githubusercontent.com/moo-man/DarkHeresy2E-FoundryVTT/master/system.json",
-  "download": "https://github.com/moo-man/DarkHeresy2E-FoundryVTT/releases/download/3.1.0/dark-heresy.zip",
+  "primaryTokenAttribute": null,
+  "secondaryTokenAttribute": null,
+  "url": "https://github.com/Vendare/DarkHeresy2E-FoundryVTT",
+  "manifest": "https://github.com/Vendare/DarkHeresy2E-FoundryVTT/releases/download/4.2.6/system.json",
+  "download": "https://github.com/Vendare/DarkHeresy2E-FoundryVTT/releases/download/4.2.6/dark-heresy.zip",
   "license": "LICENSE.txt"
 }

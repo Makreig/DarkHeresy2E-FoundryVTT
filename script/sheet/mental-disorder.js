@@ -4,7 +4,7 @@ export class MentalDisorderSheet extends DarkHeresyItemSheet {
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
             classes: ["dark-heresy", "sheet", "mental-disorder"],
-            template: "systems/dark-heresy/template/sheet/mental-disorder.html",
+            template: "systems/dark-heresy/template/sheet/mental-disorder.hbs",
             width: 500,
             height: 369,
             resizable: false,
@@ -12,15 +12,10 @@ export class MentalDisorderSheet extends DarkHeresyItemSheet {
                 {
                     navSelector: ".sheet-tabs",
                     contentSelector: ".sheet-body",
-                    initial: "stats",
-                },
+                    initial: "stats"
+                }
             ]
         });
-    }
-
-    getData() {
-        const data = super.getData();
-        return data;
     }
 
     _getHeaderButtons() {
